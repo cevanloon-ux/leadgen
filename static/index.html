@@ -1,0 +1,1105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ITdaily. Lead Campaign</title>
+<link rel="icon" type="image/png" sizes="32x32" href="/static/favicon.png">
+<link rel="icon" type="image/png" sizes="192x192" href="/static/favicon-192.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/static/apple-touch-icon.png">
+<style>
+/* ── Theme variables ─────────────────────────────────── */
+:root{
+  --bg:         #ffffff;
+  --bg-surface: #f4fcfc;
+  --bg-input:   #ffffff;
+  --bg-hover:   #f0f0f0;
+  --bg-file:    #f4fcfc;
+  --text:       #404040;
+  --text-heading:#000000;
+  --text-muted:  #9a9a9a;
+  --text-label:  #6b7280;
+  --border:      #dde1e6;
+  --border-focus:#80bdff;
+  --accent:      #004EFF;
+  --accent-hover:#003BC7;
+  --accent-soft: rgba(0,78,255,.08);
+  --link:        #007BFF;
+  --success:     #00DE86;
+  --error:       #e53e3e;
+  --logo-it:     #000000;
+  --logo-daily:  #00D2D2;
+  --toggle-bg:   #f4fcfc;
+  --toggle-hover:#00d2d2;
+  --shadow:      0 1px 3px rgba(0,0,0,.06);
+  --overlay:     rgba(255,255,255,.85);
+  --progress-bg: #e8edf2;
+  --progress-seg:#dde1e6;
+  --tag-bg:      #004EFF;
+  --tag-color:   #fff;
+  --drop-border: #dde1e6;
+  --drop-icon:   #c0c7cf;
+  --review-label:#6b7280;
+  --review-val:  #1a1a1a;
+  --check-border:#c0c7cf;
+  --radio-border:#c0c7cf;
+}
+
+/* Explicit dark OR OS-dark when no user preference saved */
+[data-theme="dark"]{
+  --bg:         #111111;
+  --bg-surface: #191919;
+  --bg-input:   #1a1a1a;
+  --bg-hover:   #222222;
+  --bg-file:    #1a1a1a;
+  --text:       #d4d4d4;
+  --text-heading:#f0f0f0;
+  --text-muted:  #707070;
+  --text-label:  #888888;
+  --border:      #2a2a2a;
+  --border-focus:#004EFF;
+  --accent:      #004EFF;
+  --accent-hover:#1a6aff;
+  --accent-soft: rgba(0,78,255,.12);
+  --link:        #5a9eff;
+  --success:     #00DE86;
+  --error:       #FF4444;
+  --logo-it:     #f0f0f0;
+  --logo-daily:  #00D2D2;
+  --toggle-bg:   #2a2a2a;
+  --toggle-hover:#00d2d2;
+  --shadow:      0 1px 3px rgba(0,0,0,.3);
+  --overlay:     rgba(17,17,17,.85);
+  --progress-bg: #1a1a1a;
+  --progress-seg:#222222;
+  --tag-bg:      #004EFF;
+  --tag-color:   #fff;
+  --drop-border: #2a2a2a;
+  --drop-icon:   #444;
+  --review-label:#707070;
+  --review-val:  #d4d4d4;
+  --check-border:#555;
+  --radio-border:#555;
+}
+
+/* ── Base ────────────────────────────────────────────── */
+*{margin:0;padding:0;box-sizing:border-box}
+body{
+  background:var(--bg);
+  color:var(--text);
+  font-family:"Helvetica Neue",Helvetica,Arial,sans-serif;
+  font-size:16px;line-height:1.6;min-height:100vh;
+  transition:background .3s,color .3s;
+}
+a{color:var(--link);text-decoration:none}
+a:hover{text-decoration:underline}
+::selection{background:var(--accent);color:#fff}
+
+/* ── Container ───────────────────────────────────────── */
+.container{max-width:720px;margin:0 auto;padding:20px 24px 60px}
+
+/* ── Header ──────────────────────────────────────────── */
+.header{text-align:center;padding:40px 0 28px;border-bottom:1px solid var(--border);margin-bottom:36px;position:relative}
+.logo-svg{width:180px;height:auto;display:inline-block}
+.logo-svg .it-letter{fill:var(--logo-it);transition:fill .3s}
+.logo-svg .daily-letter{fill:var(--logo-daily)}
+.header p{color:var(--text-muted);font-size:14px;margin-top:8px}
+
+/* ── Theme toggle ────────────────────────────────────── */
+.theme-toggle{
+  position:absolute;top:40px;right:0;
+  height:36px;padding:0 14px 0 10px;
+  border-radius:18px;background:var(--toggle-bg);
+  border:1px solid var(--border);
+  display:flex;align-items:center;gap:6px;
+  cursor:pointer;transition:all .25s;
+  font-size:15px;line-height:1;
+  color:var(--text);
+}
+.theme-toggle:hover{background:var(--toggle-hover);border-color:var(--toggle-hover);color:#fff}
+.theme-toggle .t-icon{font-size:16px;flex-shrink:0}
+.theme-toggle .t-label{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;white-space:nowrap}
+
+/* ── Progress ────────────────────────────────────────── */
+.progress-wrap{margin-bottom:40px}
+.step-label{text-align:center;font-size:13px;color:var(--text-muted);margin-bottom:16px;font-weight:700;text-transform:uppercase;letter-spacing:1px}
+.progress-bar{display:flex;gap:4px;height:3px;background:var(--progress-bg);border-radius:2px;overflow:hidden}
+.progress-bar .seg{flex:1;background:var(--progress-seg);transition:background .3s}
+.progress-bar .seg.done{background:var(--accent)}
+.progress-bar .seg.active{background:var(--accent);opacity:.45}
+
+/* ── Steps ───────────────────────────────────────────── */
+.step{display:none}
+.step.active{display:block;animation:fadeIn .25s ease}
+@keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+
+/* ── Form ────────────────────────────────────────────── */
+.form-section{margin-bottom:32px}
+.form-section h3{font-size:13px;text-transform:uppercase;letter-spacing:1.5px;color:var(--accent);margin-bottom:20px;padding-bottom:8px;border-bottom:1px solid var(--border)}
+.form-group{margin-bottom:20px}
+.form-group label{display:block;margin-bottom:6px;font-size:13px;font-weight:700;color:var(--text-label);text-transform:uppercase;letter-spacing:.5px}
+.form-group label .req{color:var(--error);margin-left:2px}
+.form-group input[type="text"],
+.form-group input[type="email"],
+.form-group input[type="url"],
+.form-group input[type="number"],
+.form-group input[type="date"],
+.form-group select,
+.form-group textarea{
+  width:100%;padding:12px 16px;
+  background:var(--bg-input);border:1px solid var(--border);border-radius:6px;
+  color:var(--text);font-size:15px;font-family:inherit;
+  transition:border-color .2s,box-shadow .2s,background .3s;
+  box-shadow:var(--shadow);
+}
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
+.form-group input::placeholder,
+.form-group textarea::placeholder{color:var(--text-muted)}
+.form-group textarea{min-height:120px;resize:vertical}
+.form-group .hint{font-size:12px;color:var(--text-muted);margin-top:4px}
+.form-group .error-msg{color:var(--error);font-size:13px;margin-top:4px;display:none}
+.form-group.has-error input,
+.form-group.has-error select,
+.form-group.has-error textarea{border-color:var(--error)}
+.form-group.has-error .error-msg{display:block}
+
+/* ── File upload ─────────────────────────────────────── */
+.file-drop{
+  border:2px dashed var(--drop-border);border-radius:10px;
+  padding:32px 20px;text-align:center;cursor:pointer;
+  transition:border-color .2s,background .2s;
+  background:var(--bg-surface);
+}
+.file-drop:hover,.file-drop.drag-over{border-color:var(--accent);background:var(--accent-soft)}
+.file-drop .icon{font-size:28px;margin-bottom:8px;color:var(--drop-icon)}
+.file-drop p{color:var(--text-muted);font-size:14px}
+.file-drop p span{color:var(--link);font-weight:600}
+.file-drop input{display:none}
+.file-list{margin-top:8px}
+.file-item{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:8px 12px;background:var(--bg-file);border:1px solid var(--border);
+  border-radius:6px;margin-top:6px;font-size:13px;
+}
+.file-item .name{color:var(--text);flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.file-item .size{color:var(--text-muted);margin:0 12px;flex-shrink:0}
+.file-item .remove{color:var(--error);cursor:pointer;font-size:18px;line-height:1;flex-shrink:0}
+
+/* ── Multi-select ────────────────────────────────────── */
+.multi-select{position:relative}
+.multi-select .ms-trigger{
+  width:100%;padding:12px 16px;
+  background:var(--bg-input);border:1px solid var(--border);border-radius:6px;
+  color:var(--text);font-size:15px;cursor:pointer;
+  display:flex;justify-content:space-between;align-items:center;
+  transition:border-color .2s;min-height:46px;user-select:none;
+  box-shadow:var(--shadow);
+}
+.multi-select .ms-trigger:hover{border-color:var(--text-muted)}
+.multi-select.open .ms-trigger{border-color:var(--accent);border-bottom-left-radius:0;border-bottom-right-radius:0}
+.ms-trigger .placeholder{color:var(--text-muted)}
+.ms-trigger .arrow{color:var(--text-muted);font-size:12px;transition:transform .2s}
+.multi-select.open .arrow{transform:rotate(180deg)}
+.ms-tags{display:flex;flex-wrap:wrap;gap:4px;flex:1}
+.ms-tag{background:var(--tag-bg);color:var(--tag-color);padding:2px 8px;border-radius:4px;font-size:12px;display:flex;align-items:center;gap:4px}
+.ms-tag .ms-tag-x{cursor:pointer;opacity:.7}
+.ms-tag .ms-tag-x:hover{opacity:1}
+.ms-dropdown{
+  position:absolute;top:100%;left:0;right:0;
+  background:var(--bg-input);border:1px solid var(--accent);border-top:none;
+  border-radius:0 0 6px 6px;max-height:280px;overflow-y:auto;z-index:100;display:none;
+  box-shadow:0 8px 24px rgba(0,0,0,.12);
+}
+.multi-select.open .ms-dropdown{display:block}
+.ms-search{width:100%;padding:10px 14px;background:var(--bg-surface);border:none;border-bottom:1px solid var(--border);color:var(--text);font-size:14px;font-family:inherit}
+.ms-search:focus{outline:none}
+.ms-option{padding:8px 14px;cursor:pointer;display:flex;align-items:center;gap:10px;font-size:14px;transition:background .1s;color:var(--text)}
+.ms-option:hover{background:var(--bg-hover)}
+.ms-option.selected{color:var(--link)}
+.ms-option .check{
+  width:16px;height:16px;border:1.5px solid var(--check-border);border-radius:4px;
+  display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .15s;
+}
+.ms-option.selected .check{background:var(--accent);border-color:var(--accent)}
+.ms-option.selected .check::after{content:"\2713";color:#fff;font-size:11px}
+.ms-group-header{padding:10px 14px 4px;font-size:11px;text-transform:uppercase;letter-spacing:1px;color:var(--accent);font-weight:700;cursor:pointer;display:flex;align-items:center;gap:6px}
+.ms-group-header .expand{font-size:10px;transition:transform .2s}
+.ms-group-header.expanded .expand{transform:rotate(90deg)}
+.ms-sub{display:none;padding-left:20px}
+.ms-sub.show{display:block}
+.ms-insert-btn{position:sticky;bottom:0;width:100%;padding:10px 14px;background:var(--accent);color:#fff;border:none;border-top:1px solid var(--border);font-size:14px;font-weight:600;cursor:pointer;font-family:inherit;border-radius:0 0 6px 6px}
+.ms-insert-btn:hover{opacity:.9}
+.ms-sub.show{display:block}
+
+/* ── Buttons ─────────────────────────────────────────── */
+.btn-row{display:flex;justify-content:space-between;margin-top:40px;padding-top:24px;border-top:1px solid var(--border)}
+.btn{padding:12px 32px;border:none;border-radius:6px;font-size:15px;font-weight:700;cursor:pointer;transition:all .2s;font-family:inherit}
+.btn-primary{background:var(--accent);color:#fff}
+.btn-primary:hover{background:var(--accent-hover)}
+.btn-primary:disabled{opacity:.4;cursor:not-allowed}
+.btn-secondary{background:transparent;color:var(--text-muted);border:1px solid var(--border)}
+.btn-secondary:hover{color:var(--text-heading);border-color:var(--text-muted)}
+.btn-submit{background:var(--success);color:#000;font-size:16px}
+.btn-submit:hover{background:#00c577}
+
+/* ── Review ──────────────────────────────────────────── */
+.review-table{width:100%;border-collapse:collapse}
+.review-table tr{border-bottom:1px solid var(--border)}
+.review-table td{padding:12px 0;vertical-align:top}
+.review-table td:first-child{color:var(--review-label);font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;width:42%;padding-right:16px}
+.review-table td:last-child{color:var(--review-val)}
+
+/* ── Checkbox ────────────────────────────────────────── */
+.check-group{display:flex;align-items:flex-start;gap:10px;cursor:pointer;font-size:14px}
+.check-group input{display:none}
+.check-box{
+  width:20px;height:20px;border:1.5px solid var(--check-border);border-radius:5px;
+  display:flex;align-items:center;justify-content:center;flex-shrink:0;
+  transition:all .15s;margin-top:1px;
+}
+.check-group input:checked+.check-box{background:var(--accent);border-color:var(--accent)}
+.check-group input:checked+.check-box::after{content:"\2713";color:#fff;font-size:13px}
+
+/* ── Radio ───────────────────────────────────────────── */
+.radio-group{display:flex;gap:20px;margin-top:8px}
+.radio-label{display:flex;align-items:center;gap:8px;cursor:pointer;font-size:15px}
+.radio-label input{display:none}
+.radio-dot{width:20px;height:20px;border:2px solid var(--radio-border);border-radius:50%;display:flex;align-items:center;justify-content:center;transition:all .15s}
+.radio-label input:checked~.radio-dot{border-color:var(--accent)}
+.radio-label input:checked~.radio-dot::after{content:"";width:10px;height:10px;background:var(--accent);border-radius:50%}
+
+/* ── Thank you ───────────────────────────────────────── */
+.thank-you{text-align:center;padding:60px 0}
+.thank-you .icon-check{width:80px;height:80px;border-radius:50%;background:var(--success);display:flex;align-items:center;justify-content:center;margin:0 auto 28px;font-size:36px;color:#000}
+.thank-you h2{font-size:24px;margin-bottom:12px;color:var(--text-heading)}
+.thank-you p{color:var(--text-muted);font-size:15px;max-width:440px;margin:0 auto 8px}
+
+/* ── Loading ─────────────────────────────────────────── */
+.loading-overlay{display:none;position:fixed;inset:0;background:var(--overlay);backdrop-filter:blur(4px);z-index:1000;justify-content:center;align-items:center}
+.loading-overlay.show{display:flex}
+.spinner{width:40px;height:40px;border:3px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin .8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* ── Scrollbar (dark mode) ───────────────────────────── */
+[data-theme="dark"] ::-webkit-scrollbar{width:8px}
+[data-theme="dark"] ::-webkit-scrollbar-track{background:#191919}
+[data-theme="dark"] ::-webkit-scrollbar-thumb{background:#333;border-radius:4px}
+[data-theme="dark"] ::-webkit-scrollbar-thumb:hover{background:#444}
+
+/* ── Responsive ──────────────────────────────────────── */
+@media(max-width:600px){
+  .container{padding:16px}
+  .header{padding:28px 0 20px}
+  .logo-svg{width:140px}
+  .theme-toggle{top:28px;padding:0 10px 0 8px;height:32px}
+  .theme-toggle .t-label{font-size:11px}
+  .btn{padding:12px 20px;font-size:14px}
+  .btn-row{gap:10px}
+  .review-table td:first-child{width:35%}
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+  <div class="header">
+    <svg class="logo-svg" viewBox="0 0 133 36" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="ITdaily.">
+      <!-- I -->
+      <polygon class="it-letter" points="12.6,4.7 12.6,0 0,0 0,4.7 3.6,4.7 3.6,24.1 0,24.1 0,28.8 12.6,28.8 12.6,24.1 9.1,24.1 9.1,4.7"/>
+      <!-- T -->
+      <path class="it-letter" d="M16.3,4.7V0H36v4.7h-7.1v24.1h-5.5V4.7H16.3z"/>
+      <!-- d -->
+      <path class="daily-letter" d="M37.9,18c0-1.6,0.2-3,0.5-4.4S39.3,11,40,10s1.6-1.8,2.7-2.4c1-0.6,2.3-0.9,3.7-0.9s2.7,0.3,3.7,0.9c1.1,0.6,1.9,1.4,2.6,2.5V0H58v28.8h-5.3v-2.9c-0.7,1.1-1.5,1.9-2.5,2.5s-2.2,0.9-3.7,0.9c-1.4,0-2.7-0.3-3.8-0.9S40.7,27,40,26s-1.3-2.2-1.6-3.6C38.1,21.1,37.9,19.6,37.9,18z M43.4,21.1c0,1.2,0.4,2.2,1.2,3s1.9,1.2,3.3,1.2c1.7,0,2.9-0.5,3.7-1.5s1.2-2.4,1.2-4.1v-3.2c0-1.7-0.4-3.1-1.2-4.1s-2-1.5-3.7-1.5c-1.4,0-2.5,0.4-3.3,1.2s-1.2,1.8-1.2,3C43.4,15.1,43.4,21.1,43.4,21.1z"/>
+      <!-- a -->
+      <path class="daily-letter" d="M62.1,22.7c0-1.7,0.6-3.3,1.8-4.5c1.2-1.3,3-2,5.3-2.2l6-0.5V14c0-1.1-0.3-1.9-0.9-2.5c-0.6-0.5-1.4-0.8-2.5-0.8s-2,0.3-2.6,0.8c-0.7,0.5-1,1.3-1,2.3h-5.3c0-1.2,0.3-2.2,0.8-3.1s1.1-1.6,1.9-2.2s1.8-1,2.9-1.4c1.1-0.3,2.3-0.5,3.6-0.5c2.6,0,4.6,0.6,6.1,1.9s2.3,3.1,2.3,5.5v10.6H84v4.1h-8.3v-3.3h-0.2c-0.6,1.2-1.4,2.1-2.5,2.8c-1,0.7-2.4,1-4,1c-1,0-1.9-0.2-2.7-0.5s-1.5-0.8-2.2-1.4c-0.6-0.6-1.1-1.3-1.4-2.1C62.3,24.6,62.1,23.7,62.1,22.7z M67.6,23.3c0,0.6,0.3,1.1,0.9,1.5c0.6,0.3,1.4,0.5,2.3,0.5c1.4,0,2.4-0.5,3.2-1.4c0.8-1,1.2-2.1,1.2-3.5v-0.8L68.8,20c-0.8,0.1-1.2,0.6-1.2,1.4V23.3z"/>
+      <!-- i -->
+      <path class="daily-letter" d="M86.6,4.7V0H92v4.7H86.6z M86.7,28.8V7.2H92v21.6H86.7z"/>
+      <!-- l -->
+      <polygon class="daily-letter" points="102,24.7 102,0 96.7,0 96.7,28.8 105.6,28.8 105.6,24.7"/>
+      <!-- y -->
+      <path class="daily-letter" d="M105.9,7.2h5.7l4.7,15.4h0.2l4.8-15.4h5.6L116.5,36h-9.2v-4.1h5.4l1.1-3.1L105.9,7.2z"/>
+      <!-- dot -->
+      <path class="daily-letter" d="M126.9,28.8v-6.1h6.1v6.1H126.9z"/>
+    </svg>
+    <p>Lead Campaign Configuration</p>
+    <button class="theme-toggle" id="themeToggle" type="button" title="Toggle theme">
+      <span class="t-icon" id="themeIcon">&#9788;</span>
+      <span class="t-label" id="themeLabel">Light</span>
+    </button>
+  </div>
+
+  <!-- Progress -->
+  <div class="progress-wrap" id="progressWrap">
+    <div class="step-label" id="stepLabel">Step 1 of 4</div>
+    <div class="progress-bar">
+      <div class="seg active" id="seg1"></div>
+      <div class="seg" id="seg2"></div>
+      <div class="seg" id="seg3"></div>
+      <div class="seg" id="seg4"></div>
+    </div>
+  </div>
+
+  <form id="leadForm" enctype="multipart/form-data" novalidate>
+    <!-- ══════════ STEP 1: Company & Campaign ══════════ -->
+    <div class="step active" id="step1">
+      <div class="form-section">
+        <h3>.company details</h3>
+
+        <div class="form-group">
+          <label>Company name <span class="req">*</span></label>
+          <input type="text" id="company_name" maxlength="100" placeholder="e.g. ACME Software Group">
+          <div class="error-msg">Please enter a valid company name (2–100 characters).</div>
+        </div>
+
+        <div class="form-group">
+          <label>Contact email address <span class="req">*</span></label>
+          <input type="email" id="contact_email" placeholder="you@company.com">
+          <div class="error-msg">Please enter a valid email address.</div>
+        </div>
+
+        <div class="form-group">
+          <label>Logo</label>
+          <div class="file-drop" id="logoDrop">
+            <div class="icon">&#128247;</div>
+            <p>Drop logo here or <span>browse</span></p>
+            <p class="hint" style="margin-top:4px">JPG or PNG, max 5 MB</p>
+            <input type="file" id="logoFile" accept=".jpg,.jpeg,.png">
+          </div>
+          <div class="file-list" id="logoList"></div>
+          <div class="error-msg">Only JPG/PNG files up to 5 MB are allowed.</div>
+        </div>
+
+        <div class="form-group">
+          <label>Company website</label>
+          <input type="text" id="company_website" placeholder="https://www.example.com">
+          
+        </div>
+      </div>
+
+      <div class="form-section">
+        <h3>.campaign details</h3>
+
+        <div class="form-group">
+          <label>Whitepaper title</label>
+          <input type="text" id="whitepaper_title" maxlength="200" placeholder="e.g. The Future of Cloud Security">
+          <div class="error-msg">Maximum 200 characters.</div>
+        </div>
+
+        <div class="form-group">
+          <label>Whitepaper(s)</label>
+          <div class="file-drop" id="wpDrop">
+            <div class="icon">&#128196;</div>
+            <p>Drop PDF files here or <span>browse</span></p>
+            <p class="hint" style="margin-top:4px">PDF only, max 10 MB per file</p>
+            <input type="file" id="wpFile" accept=".pdf" multiple>
+          </div>
+          <div class="file-list" id="wpList"></div>
+          <div class="error-msg">Only PDF files up to 10 MB each are allowed.</div>
+        </div>
+
+        <div class="form-group">
+          <label>Lead campaign name <span class="req">*</span></label>
+          <input type="text" id="campaign_name" placeholder="e.g. Q1 Cloud Security Campaign">
+          <div class="error-msg">Please enter a campaign name.</div>
+        </div>
+
+        <div class="form-group">
+          <label>Number of leads <span class="req">*</span></label>
+          <input type="number" id="number_of_leads" min="1" placeholder="e.g. 500">
+          <div class="error-msg">Please enter a number of at least 1.</div>
+        </div>
+
+        <div class="form-group" style="display:flex;gap:16px">
+          <div style="flex:1">
+            <label>Start date <span class="req">*</span></label>
+            <input type="date" id="start_date">
+            <div class="error-msg">Please select a start date.</div>
+          </div>
+          <div style="flex:1">
+            <label>End date <span class="req">*</span></label>
+            <input type="date" id="end_date">
+            <div class="error-msg">End date must be on or after start date.</div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Optional exclusion list</label>
+          <div class="file-drop" id="exclDrop">
+            <div class="icon">&#128203;</div>
+            <p>Drop file here or <span>browse</span></p>
+            <p class="hint" style="margin-top:4px">CSV, XLS or XLSX, max 10 MB</p>
+            <input type="file" id="exclFile" accept=".csv,.xls,.xlsx">
+          </div>
+          <div class="file-list" id="exclList"></div>
+          <div class="error-msg">Only CSV/XLS/XLSX files up to 10 MB are allowed.</div>
+        </div>
+      </div>
+
+      <div class="btn-row">
+        <div></div>
+        <button type="button" class="btn btn-primary" onclick="nextStep(1)">Next &rarr;</button>
+      </div>
+    </div>
+
+    <!-- ══════════ STEP 2: Targeting ══════════ -->
+    <div class="step" id="step2">
+      <div class="form-section">
+        <h3>.targeting criteria</h3>
+
+        <div class="form-group">
+          <label>Country <span class="req">*</span></label>
+          <input type="text" id="country" placeholder="e.g. Belgium, Netherlands">
+          <div class="error-msg">Please enter at least one country.</div>
+        </div>
+
+        <div class="form-group">
+          <label>Lead distribution by Country/Region</label>
+          <input type="text" id="lead_distribution" placeholder="e.g. Belgium 60%, Netherlands 40%">
+        </div>
+
+        <div class="form-group">
+          <label>Industry</label>
+          <div class="multi-select" id="ms_industry"></div>
+        </div>
+
+        <div class="form-group">
+          <label>Number of employees</label>
+          <div class="multi-select" id="ms_employees"></div>
+        </div>
+
+        <div class="form-group">
+          <label>Job level</label>
+          <div class="multi-select" id="ms_joblevel"></div>
+        </div>
+
+        <div class="form-group">
+          <label>Max number of leads per company</label>
+          <select id="max_leads_per_company">
+            <option value="">— Select —</option>
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>Company annual revenue</label>
+          <div class="multi-select" id="ms_revenue"></div>
+        </div>
+      </div>
+
+      <div class="btn-row">
+        <button type="button" class="btn btn-secondary" onclick="prevStep(2)">&larr; Previous</button>
+        <button type="button" class="btn btn-primary" onclick="nextStep(2)">Next &rarr;</button>
+      </div>
+    </div>
+
+    <!-- ══════════ STEP 3: Review & Submit ══════════ -->
+    <div class="step" id="step3">
+      <div class="form-section">
+        <h3>.review your submission</h3>
+        <table class="review-table" id="reviewTable"></table>
+      </div>
+
+      <div class="form-section">
+        <h3>.additional information</h3>
+
+        <div class="form-group">
+          <label>Notes</label>
+          <textarea id="notes" placeholder="Any additional information or requirements..."></textarea>
+        </div>
+
+        <div class="form-group">
+          <label>Should multiple-choice answers be implemented when entering contact details?</label>
+          <p style="font-size:13px;color:var(--text-muted);font-style:italic;margin-bottom:8px">If yes, we will contact you regarding this matter.</p>
+          <div class="radio-group">
+            <label class="radio-label"><input type="radio" name="mc_answer" value="yes"><span class="radio-dot"></span> Yes</label>
+            <label class="radio-label"><input type="radio" name="mc_answer" value="no"><span class="radio-dot"></span> No</label>
+          </div>
+        </div>
+
+        <div class="form-group" id="termsGroup">
+          <label class="check-group" id="termsLabel">
+            <input type="checkbox" id="termsCheck">
+            <span class="check-box"></span>
+            <span>I agree to the <a href="https://www.itdaily.be/privacy-policy" target="_blank" rel="noopener" onclick="event.stopPropagation()">terms and conditions</a></span>
+          </label>
+          <div class="error-msg">You must agree to the terms and conditions.</div>
+        </div>
+      </div>
+
+      <div class="btn-row">
+        <button type="button" class="btn btn-secondary" onclick="prevStep(3)">&larr; Previous</button>
+        <button type="button" class="btn btn-submit" onclick="submitForm()">Submit</button>
+      </div>
+    </div>
+
+    <!-- ══════════ STEP 4: Thank You ══════════ -->
+    <div class="step" id="step4">
+      <div class="thank-you">
+        <div class="icon-check">&#10003;</div>
+        <h2>Thank you for completing this form.</h2>
+        <p>A summary of this lead campaign will be sent to you by email.</p>
+        <p>We will get back to you as soon as possible with the campaign results.</p>
+      </div>
+    </div>
+
+    <input type="hidden" id="csrf_token">
+  </form>
+</div>
+
+<div class="loading-overlay" id="loadingOverlay"><div class="spinner"></div></div>
+
+<script>
+/* ─── Form link slug: extracted from URL path ─── */
+const formSlug = window.location.pathname.replace(/^\//, '');
+
+/* ─── Check form link validity on load ─── */
+async function checkFormLink() {
+  if (!formSlug) return;
+  try {
+    const r = await fetch('/api/forms/check/' + encodeURIComponent(formSlug));
+    if (!r.ok) {
+      document.querySelector('.container').innerHTML = `
+        <div class="header" style="text-align:center;padding:40px 0 28px;border-bottom:1px solid var(--border);margin-bottom:36px">
+          <svg class="logo-svg" viewBox="0 0 133 36" xmlns="http://www.w3.org/2000/svg" style="width:180px">
+            <polygon class="it-letter" points="12.6,4.7 12.6,0 0,0 0,4.7 3.6,4.7 3.6,24.1 0,24.1 0,28.8 12.6,28.8 12.6,24.1 9.1,24.1 9.1,4.7"/>
+            <path class="it-letter" d="M16.3,4.7V0H36v4.7h-7.1v24.1h-5.5V4.7H16.3z"/>
+            <path class="daily-letter" d="M37.9,18c0-1.6,0.2-3,0.5-4.4S39.3,11,40,10s1.6-1.8,2.7-2.4c1-0.6,2.3-0.9,3.7-0.9s2.7,0.3,3.7,0.9c1.1,0.6,1.9,1.4,2.6,2.5V0H58v28.8h-5.3v-2.9c-0.7,1.1-1.5,1.9-2.5,2.5s-2.2,0.9-3.7,0.9c-1.4,0-2.7-0.3-3.8-0.9S40.7,27,40,26s-1.3-2.2-1.6-3.6C38.1,21.1,37.9,19.6,37.9,18z M43.4,21.1c0,1.2,0.4,2.2,1.2,3s1.9,1.2,3.3,1.2c1.7,0,2.9-0.5,3.7-1.5s1.2-2.4,1.2-4.1v-3.2c0-1.7-0.4-3.1-1.2-4.1s-2-1.5-3.7-1.5c-1.4,0-2.5,0.4-3.3,1.2s-1.2,1.8-1.2,3C43.4,15.1,43.4,21.1,43.4,21.1z"/>
+            <path class="daily-letter" d="M126.9,28.8v-6.1h6.1v6.1H126.9z"/>
+          </svg>
+        </div>
+        <div style="text-align:center;padding:60px 0">
+          <h2 style="font-size:22px;color:var(--text-heading);margin-bottom:12px">This form is no longer available</h2>
+          <p style="color:var(--text-muted);font-size:15px">The form link has expired or has already been submitted.</p>
+        </div>`;
+    }
+  } catch(e) { /* Network error, show form anyway */ }
+}
+
+/* ─── Theme system: follows OS preference, manual override saved in localStorage ─── */
+const ThemeManager = {
+  mediaQuery: window.matchMedia('(prefers-color-scheme: dark)'),
+
+  /** Resolve the active theme: saved preference wins, otherwise follow OS */
+  getEffective() {
+    const saved = localStorage.getItem('leadgen-theme');
+    if (saved === 'dark' || saved === 'light') return saved;
+    return this.mediaQuery.matches ? 'dark' : 'light';
+  },
+
+  /** Apply theme to DOM and update toggle button */
+  apply(theme) {
+    if (theme === 'dark') {
+      document.documentElement.setAttribute('data-theme', 'dark');
+    } else {
+      document.documentElement.removeAttribute('data-theme');
+    }
+    // Update toggle icon + label
+    const icon = document.getElementById('themeIcon');
+    const label = document.getElementById('themeLabel');
+    if (icon) icon.innerHTML = theme === 'dark' ? '&#9790;' : '&#9788;';
+    if (label) label.textContent = theme === 'dark' ? 'Dark' : 'Light';
+  },
+
+  /** Toggle between light/dark and save preference */
+  toggle() {
+    const current = this.getEffective();
+    const next = current === 'dark' ? 'light' : 'dark';
+    localStorage.setItem('leadgen-theme', next);
+    this.apply(next);
+  },
+
+  /** Init: apply theme + listen for OS changes */
+  init() {
+    this.apply(this.getEffective());
+
+    // When OS preference changes and user hasn't manually overridden, follow it
+    this.mediaQuery.addEventListener('change', () => {
+      const saved = localStorage.getItem('leadgen-theme');
+      if (!saved) {
+        // No manual override — follow OS
+        this.apply(this.getEffective());
+      }
+    });
+
+    document.getElementById('themeToggle').addEventListener('click', () => this.toggle());
+  }
+};
+
+// Apply immediately (before DOM ready) to prevent flash
+ThemeManager.apply(ThemeManager.getEffective());
+
+// Bind toggle button after DOM ready
+document.addEventListener('DOMContentLoaded', () => {
+  ThemeManager.init();
+});
+
+/* ─── Data ─── */
+const INDUSTRY_OPTIONS = [
+  "Agriculture","Banking/Mortgage","Biotech","Building Construction","Business",
+  "Creative/Design","Customer Support/Client Services","Education","Engineering",
+  "Executives","Finance/Accounting","Food Services/Hospitality","Human Resources",
+  "Installation/Maintenance/Repair","Insurance","Journalism/Media/Entertainment",
+  "Legal","Logistics/Transportation","Manufacturing/Production/Operations",
+  "Marketing","Medical and Health","Quality Assurance/Safety","Real Estate",
+  "Retail","Sales","Security Services"
+];
+const IT_SUBS = [
+  "Business Intelligence/Data Science","Computer Engineering","Computer/Network Security",
+  "Cyber Security/Information Security","Data Center","Database Management",
+  "Desktop Systems","Devops & Application Management","Enterprise Software Implementation",
+  "General Management","Hardware","IT Infrastructure","IT Project Management",
+  "IT Systems Management","Network/Server Administration","Product Development",
+  "QA & Testing","Senior Management","Software Development","Software Engineer",
+  "Software/System Architecture","Storage Management","System Admin/Desktop Support",
+  "System Analysis","Telecommunications & Wireless","Web Developer"
+];
+const EMPLOYEE_OPTIONS = ["10 \u2013 24","25 \u2013 49","50 \u2013 99","100 \u2013 249","250 \u2013 499","500 \u2013 999","1,000 \u2013 2,499","2,500 \u2013 4,999","5,000 \u2013 9,999","10,000 \u2013 19,999","20,000 \u2013 49,999","50,000+"];
+const JOBLEVEL_OPTIONS = ["C-Level","Executive VP","Senior VP","VP","Senior Director","Director","Senior Manager","Manager","Supervisor","Senior Employee","Individual Contributor","Owner","Contractor","Consultant","Intern"];
+const REVENUE_OPTIONS = ["Less than \u20ac500,000","\u20ac500,000 \u2013 \u20ac999,999","\u20ac1 \u2013 4.99 Million","\u20ac5 \u2013 9.99 Million","\u20ac10 \u2013 24.99 Million","\u20ac25 \u2013 49.99 Million","\u20ac50 \u2013 99.99 Million","\u20ac100+ Million"];
+
+/* ─── Multi-select component ─── */
+class MultiSelect {
+  constructor(el, options, opts = {}) {
+    this.el = el;
+    this.options = options;
+    this.selected = new Set();
+    this.itGroup = opts.itGroup || null;
+    this.render();
+  }
+  render() {
+    const sel = this.selected;
+    let html = `<div class="ms-trigger"><div class="ms-tags">`;
+    if (sel.size === 0) html += `<span class="placeholder">Select options...</span>`;
+    else sel.forEach(v => html += `<span class="ms-tag">${v} <span class="ms-tag-x" data-val="${v}">&times;</span></span>`);
+    html += `</div><span class="arrow">&#9660;</span></div>`;
+    html += `<div class="ms-dropdown"><input class="ms-search" placeholder="Search...">`;
+    this.options.forEach(o => {
+      const s = sel.has(o) ? ' selected' : '';
+      html += `<div class="ms-option${s}" data-val="${o}"><span class="check"></span>${o}</div>`;
+    });
+    if (this.itGroup) {
+      html += `<div class="ms-group-header" data-group="it"><span class="expand">&#9654;</span> IT/Computers/Electronics</div>`;
+      html += `<div class="ms-sub" id="itSub">`;
+      this.itGroup.forEach(o => {
+        const s = sel.has(o) ? ' selected' : '';
+        html += `<div class="ms-option${s}" data-val="${o}"><span class="check"></span>${o}</div>`;
+      });
+      html += `</div>`;
+    }
+    html += `<button type="button" class="ms-insert-btn">Invoegen</button>`;
+    html += `</div>`;
+    this.el.innerHTML = html;
+    this.bind();
+  }
+  updateTags() {
+    const tags = this.el.querySelector('.ms-tags');
+    let html = '';
+    if (this.selected.size === 0) html = `<span class="placeholder">Select options...</span>`;
+    else this.selected.forEach(v => html += `<span class="ms-tag">${v} <span class="ms-tag-x" data-val="${v}">&times;</span></span>`);
+    tags.innerHTML = html;
+    tags.querySelectorAll('.ms-tag-x').forEach(x => {
+      x.addEventListener('click', e => {
+        e.stopPropagation();
+        this.selected.delete(e.target.dataset.val);
+        const opt = this.el.querySelector(`.ms-option[data-val="${e.target.dataset.val}"]`);
+        if (opt) opt.classList.remove('selected');
+        this.updateTags();
+      });
+    });
+  }
+  closeDropdown() {
+    this.el.classList.remove('open');
+    this.updateTags();
+  }
+  bind() {
+    const trigger = this.el.querySelector('.ms-trigger');
+    const search = this.el.querySelector('.ms-search');
+
+    trigger.addEventListener('click', e => {
+      if (e.target.classList.contains('ms-tag-x')) {
+        e.stopPropagation();
+        this.selected.delete(e.target.dataset.val);
+        const opt = this.el.querySelector(`.ms-option[data-val="${e.target.dataset.val}"]`);
+        if (opt) opt.classList.remove('selected');
+        this.updateTags();
+        return;
+      }
+      this.el.classList.toggle('open');
+      if (this.el.classList.contains('open')) setTimeout(() => search.focus(), 50);
+    });
+
+    document.addEventListener('click', e => {
+      if (!this.el.contains(e.target)) this.closeDropdown();
+    });
+
+    search.addEventListener('input', () => {
+      const q = search.value.toLowerCase();
+      this.el.querySelectorAll('.ms-option').forEach(o => {
+        o.style.display = o.dataset.val.toLowerCase().includes(q) ? '' : 'none';
+      });
+    });
+
+    this.el.querySelectorAll('.ms-option').forEach(o => {
+      o.addEventListener('click', () => {
+        const v = o.dataset.val;
+        if (this.selected.has(v)) { this.selected.delete(v); o.classList.remove('selected'); }
+        else { this.selected.add(v); o.classList.add('selected'); }
+      });
+    });
+
+    this.el.querySelector('.ms-insert-btn').addEventListener('click', e => {
+      e.stopPropagation();
+      this.closeDropdown();
+    });
+
+    const gh = this.el.querySelector('.ms-group-header');
+    if (gh) {
+      gh.addEventListener('click', () => {
+        gh.classList.toggle('expanded');
+        this.el.querySelector('.ms-sub').classList.toggle('show');
+      });
+    }
+  }
+  getValues() { return [...this.selected]; }
+}
+
+/* ─── Init ─── */
+let msIndustry, msEmployees, msJobLevel, msRevenue;
+document.addEventListener('DOMContentLoaded', () => {
+  msIndustry = new MultiSelect(document.getElementById('ms_industry'), INDUSTRY_OPTIONS, { itGroup: IT_SUBS });
+  msEmployees = new MultiSelect(document.getElementById('ms_employees'), EMPLOYEE_OPTIONS);
+  msJobLevel = new MultiSelect(document.getElementById('ms_joblevel'), JOBLEVEL_OPTIONS);
+  msRevenue = new MultiSelect(document.getElementById('ms_revenue'), REVENUE_OPTIONS);
+  restoreFormData();
+  fetchCsrf();
+  initFileUploads();
+  checkFormLink();
+});
+
+/* ─── CSRF ─── */
+async function fetchCsrf() {
+  try {
+    const r = await fetch('/api/csrf-token');
+    const d = await r.json();
+    document.getElementById('csrf_token').value = d.token;
+  } catch(e) { console.error('CSRF fetch failed', e); }
+}
+
+/* ─── File uploads ─── */
+const files = { logo: null, whitepapers: [], exclusion: null };
+
+function initFileUploads() {
+  setupDrop('logoDrop', 'logoFile', 'logoList', {
+    accept: ['.jpg','.jpeg','.png'], max: 5*1024*1024, single: true,
+    onAdd: f => { files.logo = f; },
+    onRemove: () => { files.logo = null; }
+  });
+  setupDrop('wpDrop', 'wpFile', 'wpList', {
+    accept: ['.pdf'], max: 10*1024*1024, single: false,
+    onAdd: f => { files.whitepapers.push(f); },
+    onRemove: i => { files.whitepapers.splice(i, 1); }
+  });
+  setupDrop('exclDrop', 'exclFile', 'exclList', {
+    accept: ['.csv','.xls','.xlsx'], max: 10*1024*1024, single: true,
+    onAdd: f => { files.exclusion = f; },
+    onRemove: () => { files.exclusion = null; }
+  });
+}
+
+function setupDrop(dropId, inputId, listId, cfg) {
+  const drop = document.getElementById(dropId);
+  const input = document.getElementById(inputId);
+  const list = document.getElementById(listId);
+
+  drop.addEventListener('click', () => input.click());
+  drop.addEventListener('dragover', e => { e.preventDefault(); drop.classList.add('drag-over'); });
+  drop.addEventListener('dragleave', () => drop.classList.remove('drag-over'));
+  drop.addEventListener('drop', e => {
+    e.preventDefault(); drop.classList.remove('drag-over');
+    handleFiles([...e.dataTransfer.files]);
+  });
+  input.addEventListener('change', () => handleFiles([...input.files]));
+
+  function handleFiles(fileList) {
+    for (const f of fileList) {
+      const ext = '.' + f.name.split('.').pop().toLowerCase();
+      if (!cfg.accept.includes(ext)) { alert(`File type ${ext} not allowed.`); continue; }
+      if (f.size > cfg.max) { alert(`File too large. Max ${cfg.max/(1024*1024)} MB.`); continue; }
+      if (cfg.single) {
+        cfg.onAdd(f);
+        renderList([f]);
+      } else {
+        cfg.onAdd(f);
+        renderList(cfg.single ? [f] : files.whitepapers);
+      }
+    }
+    input.value = '';
+  }
+
+  function renderList(arr) {
+    if (cfg.single) arr = arr.slice(-1);
+    list.innerHTML = arr.map((f, i) =>
+      `<div class="file-item"><span class="name">${f.name}</span><span class="size">${(f.size/1024).toFixed(0)} KB</span><span class="remove" data-i="${i}">&times;</span></div>`
+    ).join('');
+    list.querySelectorAll('.remove').forEach(el => {
+      el.addEventListener('click', () => {
+        cfg.onRemove(cfg.single ? null : parseInt(el.dataset.i));
+        renderList(cfg.single ? [] : files.whitepapers);
+      });
+    });
+  }
+}
+
+/* ─── Helpers ─── */
+function $(id) { return document.getElementById(id); }
+function val(id) { return ($(id)?.value || '').trim(); }
+function setError(id, show) {
+  const g = $(id)?.closest('.form-group');
+  if (g) { show ? g.classList.add('has-error') : g.classList.remove('has-error'); }
+}
+
+/* ─── Navigation ─── */
+let currentStep = 1;
+
+function updateProgress() {
+  $('stepLabel').textContent = `Step ${currentStep} of 4`;
+  for (let i = 1; i <= 4; i++) {
+    const seg = $('seg' + i);
+    seg.className = 'seg';
+    if (i < currentStep) seg.classList.add('done');
+    else if (i === currentStep) seg.classList.add('active');
+  }
+  if (currentStep === 4) $('progressWrap').style.display = 'none';
+  else $('progressWrap').style.display = '';
+}
+
+function showStep(n) {
+  document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
+  $('step' + n).classList.add('active');
+  currentStep = n;
+  updateProgress();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function nextStep(from) {
+  if (!validateStep(from)) return;
+  saveStepData(from + 1);
+  if (from === 2) buildReview();
+  showStep(from + 1);
+}
+
+function prevStep(from) {
+  saveStepData(from - 1);
+  showStep(from - 1);
+}
+
+/* ─── Validation ─── */
+function validateStep(step) {
+  let valid = true;
+  const check = (id, condition) => { setError(id, !condition); if (!condition) valid = false; };
+
+  if (step === 1) {
+    check('company_name', val('company_name').length >= 2 && val('company_name').length <= 100);
+    check('contact_email', /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val('contact_email')));
+
+    check('campaign_name', val('campaign_name').length > 0);
+    check('number_of_leads', parseInt(val('number_of_leads')) >= 1);
+    check('start_date', val('start_date') !== '');
+    check('end_date', val('end_date') !== '' && val('end_date') >= val('start_date'));
+  }
+  if (step === 2) {
+    check('country', val('country').length >= 2);
+  }
+  return valid;
+}
+
+/* ─── Review ─── */
+function buildReview() {
+  const rows = [
+    ['Company Name', val('company_name')],
+    ['Contact Email', val('contact_email')],
+    ['Logo', files.logo ? files.logo.name : '\u2014'],
+    ['Company Website', val('company_website') || '\u2014'],
+    ['Whitepaper Title', val('whitepaper_title') || '\u2014'],
+    ['Whitepapers', files.whitepapers.length ? files.whitepapers.map(f=>f.name).join(', ') : '\u2014'],
+    ['Campaign Name', val('campaign_name')],
+    ['Number of Leads', val('number_of_leads')],
+    ['Start Date', val('start_date')],
+    ['End Date', val('end_date')],
+    ['Exclusion List', files.exclusion ? files.exclusion.name : '\u2014'],
+    ['Country', val('country')],
+    ['Lead Distribution', val('lead_distribution') || '\u2014'],
+    ['Industry', msIndustry.getValues().join(', ') || '\u2014'],
+    ['Number of Employees', msEmployees.getValues().join(', ') || '\u2014'],
+    ['Job Level', msJobLevel.getValues().join(', ') || '\u2014'],
+    ['Max Leads/Company', val('max_leads_per_company') || '\u2014'],
+    ['Annual Revenue', msRevenue.getValues().join(', ') || '\u2014'],
+  ];
+  $('reviewTable').innerHTML = rows.map(([l,v]) => `<tr><td>${l}</td><td>${v}</td></tr>`).join('');
+}
+
+/* ─── Form persistence (sessionStorage) ─── */
+const STORAGE_KEY = 'leadgen_' + (typeof formSlug !== 'undefined' ? formSlug : 'form');
+
+function fileToB64(file) {
+  return new Promise(r => {
+    const rd = new FileReader();
+    rd.onload = () => r({ name: file.name, type: file.type, size: file.size, data: rd.result });
+    rd.readAsDataURL(file);
+  });
+}
+
+function b64ToFile(obj) {
+  const arr = obj.data.split(','), mime = arr[0].match(/:(.*?);/)[1];
+  const bstr = atob(arr[1]); let n = bstr.length; const u8 = new Uint8Array(n);
+  while (n--) u8[n] = bstr.charCodeAt(n);
+  return new File([u8], obj.name, { type: mime });
+}
+
+async function saveStepData(step) {
+  const saved = JSON.parse(sessionStorage.getItem(STORAGE_KEY) || '{}');
+  // Text fields
+  const textFields = ['company_name','contact_email','company_website','whitepaper_title',
+    'campaign_name','number_of_leads','start_date','end_date','country','lead_distribution',
+    'max_leads_per_company','notes'];
+  textFields.forEach(id => { const el = $(id); if (el) saved[id] = el.value; });
+  // Radio
+  const mc = document.querySelector('input[name="mc_answer"]:checked');
+  saved.mc_answer = mc ? mc.value : '';
+  // Checkbox
+  saved.termsCheck = $('termsCheck')?.checked || false;
+  // Multi-selects
+  saved.ms_industry = msIndustry.getValues();
+  saved.ms_employees = msEmployees.getValues();
+  saved.ms_joblevel = msJobLevel.getValues();
+  saved.ms_revenue = msRevenue.getValues();
+  // Files as base64
+  if (files.logo) { saved.logo = await fileToB64(files.logo); } else { saved.logo = null; }
+  const wps = [];
+  for (const f of files.whitepapers) wps.push(await fileToB64(f));
+  saved.whitepapers = wps;
+  if (files.exclusion) { saved.exclusion = await fileToB64(files.exclusion); } else { saved.exclusion = null; }
+  // Current step
+  saved.currentStep = step;
+  try { sessionStorage.setItem(STORAGE_KEY, JSON.stringify(saved)); } catch(e) { console.warn('Storage full', e); }
+}
+
+function restoreFormData() {
+  const raw = sessionStorage.getItem(STORAGE_KEY);
+  if (!raw) return;
+  let saved;
+  try { saved = JSON.parse(raw); } catch(e) { return; }
+  // Text fields
+  const textFields = ['company_name','contact_email','company_website','whitepaper_title',
+    'campaign_name','number_of_leads','start_date','end_date','country','lead_distribution',
+    'max_leads_per_company','notes'];
+  textFields.forEach(id => { const el = $(id); if (el && saved[id] != null) el.value = saved[id]; });
+  // Radio
+  if (saved.mc_answer) {
+    const r = document.querySelector(`input[name="mc_answer"][value="${saved.mc_answer}"]`);
+    if (r) r.checked = true;
+  }
+  // Checkbox
+  if (saved.termsCheck && $('termsCheck')) $('termsCheck').checked = true;
+  // Multi-selects
+  if (saved.ms_industry) saved.ms_industry.forEach(v => msIndustry.selected.add(v));
+  if (saved.ms_employees) saved.ms_employees.forEach(v => msEmployees.selected.add(v));
+  if (saved.ms_joblevel) saved.ms_joblevel.forEach(v => msJobLevel.selected.add(v));
+  if (saved.ms_revenue) saved.ms_revenue.forEach(v => msRevenue.selected.add(v));
+  [msIndustry, msEmployees, msJobLevel, msRevenue].forEach(ms => ms.render());
+  // Files
+  if (saved.logo) {
+    try {
+      files.logo = b64ToFile(saved.logo);
+      const list = document.getElementById('logoList');
+      list.innerHTML = `<div class="file-item"><span class="name">${saved.logo.name}</span><span class="size">${(saved.logo.size/1024).toFixed(0)} KB</span><span class="remove" onclick="files.logo=null;this.closest('.file-item').remove();saveStepData(currentStep)">&times;</span></div>`;
+    } catch(e) {}
+  }
+  if (saved.whitepapers && saved.whitepapers.length) {
+    files.whitepapers = saved.whitepapers.map(w => b64ToFile(w));
+    const list = document.getElementById('wpList');
+    list.innerHTML = saved.whitepapers.map((w, i) =>
+      `<div class="file-item"><span class="name">${w.name}</span><span class="size">${(w.size/1024).toFixed(0)} KB</span><span class="remove" data-i="${i}">&times;</span></div>`
+    ).join('');
+    list.querySelectorAll('.remove').forEach(el => {
+      el.addEventListener('click', () => {
+        files.whitepapers.splice(parseInt(el.dataset.i), 1);
+        el.closest('.file-item').remove();
+        saveStepData(currentStep);
+      });
+    });
+  }
+  if (saved.exclusion) {
+    try {
+      files.exclusion = b64ToFile(saved.exclusion);
+      const list = document.getElementById('exclList');
+      list.innerHTML = `<div class="file-item"><span class="name">${saved.exclusion.name}</span><span class="size">${(saved.exclusion.size/1024).toFixed(0)} KB</span><span class="remove" onclick="files.exclusion=null;this.closest('.file-item').remove();saveStepData(currentStep)">&times;</span></div>`;
+    } catch(e) {}
+  }
+  // Restore step
+  if (saved.currentStep && saved.currentStep > 1) {
+    showStep(saved.currentStep);
+  }
+}
+
+function clearFormStorage() {
+  sessionStorage.removeItem(STORAGE_KEY);
+}
+
+/* ─── Submit ─── */
+async function submitForm() {
+  if (!$('termsCheck').checked) {
+    $('termsGroup').classList.add('has-error');
+    $('termsGroup').querySelector('.error-msg').style.display = 'block';
+    return;
+  }
+  $('termsGroup').classList.remove('has-error');
+  $('termsGroup').querySelector('.error-msg').style.display = 'none';
+
+  $('loadingOverlay').classList.add('show');
+
+  const fd = new FormData();
+  fd.append('csrf_token', val('csrf_token'));
+  if (formSlug) fd.append('form_link_slug', formSlug);
+  fd.append('company_name', val('company_name'));
+  fd.append('contact_email', val('contact_email'));
+  fd.append('company_website', val('company_website'));
+  fd.append('whitepaper_title', val('whitepaper_title'));
+  fd.append('campaign_name', val('campaign_name'));
+  fd.append('number_of_leads', val('number_of_leads'));
+  fd.append('start_date', val('start_date'));
+  fd.append('end_date', val('end_date'));
+  fd.append('country', val('country'));
+  fd.append('lead_distribution', val('lead_distribution'));
+  fd.append('industry', JSON.stringify(msIndustry.getValues()));
+  fd.append('number_of_employees', JSON.stringify(msEmployees.getValues()));
+  fd.append('job_level', JSON.stringify(msJobLevel.getValues()));
+  fd.append('max_leads_per_company', val('max_leads_per_company') || '1');
+  fd.append('company_annual_revenue', JSON.stringify(msRevenue.getValues()));
+  fd.append('notes', val('notes'));
+  const mc = document.querySelector('input[name="mc_answer"]:checked');
+  fd.append('multiple_choice_answer', mc ? mc.value : '');
+
+  if (files.logo) fd.append('logo', files.logo);
+  files.whitepapers.forEach((f, i) => fd.append(`whitepapers_${i}`, f));
+  if (files.exclusion) fd.append('exclusion_list', files.exclusion);
+
+  try {
+    const res = await fetch('/api/submit', { method: 'POST', body: fd });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.detail || 'Submission failed');
+    showStep(4);
+  } catch (e) {
+    alert(e.message || 'An error occurred. Please try again.');
+  } finally {
+    $('loadingOverlay').classList.remove('show');
+  }
+}
+</script>
+</body>
+</html>

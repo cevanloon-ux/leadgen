@@ -1,0 +1,673 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ITdaily. Lead Platform</title>
+<link rel="icon" type="image/png" sizes="32x32" href="/static/favicon.png">
+<link rel="icon" type="image/png" sizes="192x192" href="/static/favicon-192.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/static/apple-touch-icon.png">
+<style>
+:root{
+  --bg:#ffffff;--bg-surface:#f4fcfc;--bg-input:#ffffff;--bg-hover:#f0f0f0;
+  --text:#404040;--text-heading:#000000;--text-muted:#9a9a9a;--text-label:#6b7280;
+  --border:#dde1e6;--accent:#004EFF;--accent-hover:#003BC7;--accent-soft:rgba(0,78,255,.08);
+  --link:#007BFF;--success:#00DE86;--error:#e53e3e;--warn:#f59e0b;
+  --logo-it:#000000;--logo-daily:#00D2D2;
+  --toggle-bg:#f4fcfc;--toggle-hover:#00d2d2;
+  --shadow:0 1px 3px rgba(0,0,0,.06);
+  --overlay:rgba(255,255,255,.85);
+  --badge-pending:#f59e0b;--badge-submitted:#00DE86;
+}
+[data-theme="dark"]{
+  --bg:#111111;--bg-surface:#191919;--bg-input:#1a1a1a;--bg-hover:#222222;
+  --text:#d4d4d4;--text-heading:#f0f0f0;--text-muted:#707070;--text-label:#888888;
+  --border:#2a2a2a;--accent:#004EFF;--accent-hover:#1a6aff;--accent-soft:rgba(0,78,255,.12);
+  --link:#5a9eff;--success:#00DE86;--error:#FF4444;--warn:#f59e0b;
+  --logo-it:#f0f0f0;--logo-daily:#00D2D2;
+  --toggle-bg:#2a2a2a;--toggle-hover:#00d2d2;
+  --shadow:0 1px 3px rgba(0,0,0,.3);
+  --overlay:rgba(17,17,17,.85);
+  --badge-pending:#f59e0b;--badge-submitted:#00DE86;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--bg);color:var(--text);font-family:"Helvetica Neue",Helvetica,Arial,sans-serif;font-size:15px;line-height:1.6;transition:background .3s,color .3s}
+a{color:var(--link);text-decoration:none}a:hover{text-decoration:underline}
+::selection{background:var(--accent);color:#fff}
+
+/* Header */
+.top-bar{background:var(--bg-surface);border-bottom:1px solid var(--border);padding:12px 24px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:50}
+.top-left{display:flex;align-items:center;gap:16px}
+.logo-svg{width:120px;height:auto}
+.logo-svg .it-letter{fill:var(--logo-it);transition:fill .3s}
+.logo-svg .daily-letter{fill:var(--logo-daily)}
+.top-right{display:flex;align-items:center;gap:12px}
+.user-info{font-size:13px;color:var(--text-muted)}
+.user-info strong{color:var(--text)}
+.btn-sm{padding:6px 14px;border:1px solid var(--border);border-radius:6px;background:transparent;color:var(--text);font-size:13px;cursor:pointer;font-family:inherit;transition:all .2s}
+.btn-sm:hover{border-color:var(--text-muted);color:var(--text-heading)}
+.theme-toggle{height:32px;padding:0 10px 0 8px;border-radius:16px;background:var(--toggle-bg);border:1px solid var(--border);display:flex;align-items:center;gap:4px;cursor:pointer;transition:all .25s;font-size:14px;color:var(--text)}
+.theme-toggle:hover{background:var(--toggle-hover);border-color:var(--toggle-hover);color:#fff}
+.theme-toggle .t-icon{font-size:14px}.theme-toggle .t-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px}
+
+/* Container */
+.container{max-width:1100px;margin:0 auto;padding:24px}
+
+/* Tabs */
+.tabs{display:flex;gap:4px;margin-bottom:28px;border-bottom:2px solid var(--border);padding-bottom:0}
+.tab{padding:10px 20px;font-size:14px;font-weight:700;color:var(--text-muted);cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-2px;transition:all .2s;text-transform:uppercase;letter-spacing:.5px}
+.tab:hover{color:var(--text)}
+.tab.active{color:var(--accent);border-bottom-color:var(--accent)}
+.tab-content{display:none}.tab-content.active{display:block;animation:fadeIn .2s ease}
+@keyframes fadeIn{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:translateY(0)}}
+
+/* Cards */
+.card{background:var(--bg-surface);border:1px solid var(--border);border-radius:10px;padding:24px;margin-bottom:24px;box-shadow:var(--shadow)}
+.card h3{font-size:14px;text-transform:uppercase;letter-spacing:1px;color:var(--accent);margin-bottom:16px;padding-bottom:8px;border-bottom:1px solid var(--border)}
+
+/* Create form */
+.create-row{display:flex;gap:12px;align-items:flex-end}
+.create-row .input-wrap{flex:1}
+.create-row label{display:block;font-size:12px;font-weight:700;color:var(--text-label);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px}
+.create-row input{width:100%;padding:10px 14px;background:var(--bg-input);border:1px solid var(--border);border-radius:6px;color:var(--text);font-size:14px;font-family:inherit;box-shadow:var(--shadow)}
+.create-row input:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
+.btn-accent{padding:10px 20px;border:none;border-radius:6px;background:var(--accent);color:#fff;font-size:14px;font-weight:700;cursor:pointer;transition:background .2s;font-family:inherit;white-space:nowrap}
+.btn-accent:hover{background:var(--accent-hover)}
+.btn-accent:disabled{opacity:.4;cursor:not-allowed}
+
+/* Tables */
+.tbl-wrap{overflow-x:auto}
+table{width:100%;border-collapse:collapse}
+th{text-align:left;font-size:11px;text-transform:uppercase;letter-spacing:1px;color:var(--text-muted);padding:8px 12px;border-bottom:2px solid var(--border);font-weight:700}
+td{padding:10px 12px;border-bottom:1px solid var(--border);font-size:14px;vertical-align:middle}
+tr:hover td{background:var(--bg-hover)}
+.empty-row td{text-align:center;color:var(--text-muted);padding:32px;font-style:italic}
+
+/* Badges */
+.badge{display:inline-block;padding:2px 10px;border-radius:12px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px}
+.badge-pending{background:rgba(245,158,11,.15);color:var(--badge-pending)}
+.badge-submitted{background:rgba(0,222,134,.15);color:#059669}
+
+/* Copy button */
+.url-cell{display:flex;align-items:center;gap:6px}
+.url-text{font-size:13px;color:var(--link);max-width:280px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.btn-copy{padding:4px 8px;border:1px solid var(--border);border-radius:4px;background:var(--bg-input);color:var(--text-muted);font-size:11px;cursor:pointer;transition:all .2s;font-family:inherit;white-space:nowrap}
+.btn-copy:hover{border-color:var(--accent);color:var(--accent)}
+.btn-copy.copied{border-color:var(--success);color:#059669;background:rgba(0,222,134,.08)}
+
+/* Action buttons */
+.btn-view{padding:4px 12px;border:1px solid var(--accent);border-radius:4px;background:transparent;color:var(--accent);font-size:12px;cursor:pointer;font-weight:600;transition:all .2s;font-family:inherit}
+.btn-view:hover{background:var(--accent);color:#fff}
+.btn-del{padding:4px 12px;border:1px solid var(--error);border-radius:4px;background:transparent;color:var(--error);font-size:12px;cursor:pointer;font-weight:600;transition:all .2s;font-family:inherit}
+.btn-del:hover{background:var(--error);color:#fff;border-color:var(--error)}
+
+/* Filters */
+.filter-row{display:flex;gap:12px;align-items:flex-end;margin-bottom:16px;flex-wrap:wrap}
+.filter-row label{font-size:12px;font-weight:700;color:var(--text-label);text-transform:uppercase;letter-spacing:.5px}
+.filter-row input[type="date"]{padding:8px 12px;background:var(--bg-input);border:1px solid var(--border);border-radius:6px;color:var(--text);font-size:13px;font-family:inherit}
+.filter-row input:focus{outline:none;border-color:var(--accent)}
+.btn-filter{padding:8px 16px;border:1px solid var(--accent);border-radius:6px;background:transparent;color:var(--accent);font-size:13px;font-weight:600;cursor:pointer;font-family:inherit;transition:all .2s}
+.btn-filter:hover{background:var(--accent);color:#fff}
+.btn-clear{padding:8px 16px;border:1px solid var(--border);border-radius:6px;background:transparent;color:var(--text-muted);font-size:13px;cursor:pointer;font-family:inherit}
+
+/* Modal */
+.modal-overlay{display:none;position:fixed;inset:0;background:var(--overlay);backdrop-filter:blur(4px);z-index:200;justify-content:center;align-items:center}
+.modal-overlay.show{display:flex}
+.modal{background:var(--bg-surface);border:1px solid var(--border);border-radius:12px;padding:32px;max-width:600px;width:90%;max-height:85vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,.2);position:relative}
+.modal-close{position:absolute;top:12px;right:16px;background:none;border:none;font-size:24px;color:var(--text-muted);cursor:pointer;line-height:1}
+.modal-close:hover{color:var(--text)}
+.modal h3{font-size:16px;color:var(--text-heading);margin-bottom:16px}
+.modal-url{background:var(--bg-input);border:1px solid var(--border);border-radius:8px;padding:16px;margin:16px 0;display:flex;align-items:center;gap:12px}
+.modal-url .url-full{flex:1;font-size:14px;color:var(--link);word-break:break-all}
+.modal-url .btn-copy-lg{padding:8px 16px;border:1px solid var(--accent);border-radius:6px;background:var(--accent);color:#fff;font-size:13px;font-weight:700;cursor:pointer;transition:all .2s;font-family:inherit;white-space:nowrap}
+.modal-url .btn-copy-lg.copied{background:var(--success);border-color:var(--success)}
+
+/* Detail modal */
+.detail-table{width:100%;border-collapse:collapse}
+.detail-table tr{border-bottom:1px solid var(--border)}
+.detail-table td{padding:8px 0;vertical-align:top}
+.detail-table td:first-child{color:var(--text-label);font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;width:40%;padding-right:12px}
+.detail-table td:last-child{color:var(--text)}
+.detail-actions{display:flex;gap:8px;margin-top:20px;flex-wrap:wrap}
+.btn-download{padding:8px 16px;border:1px solid var(--accent);border-radius:6px;background:transparent;color:var(--accent);font-size:13px;font-weight:600;cursor:pointer;font-family:inherit;transition:all .2s;text-decoration:none;display:inline-flex;align-items:center;gap:4px}
+.btn-download:hover{background:var(--accent);color:#fff;text-decoration:none}
+
+/* Settings */
+.settings-section{margin-bottom:32px}
+.settings-section h3{font-size:14px;text-transform:uppercase;letter-spacing:1px;color:var(--accent);margin-bottom:16px;padding-bottom:8px;border-bottom:1px solid var(--border)}
+.form-row{display:flex;gap:12px;margin-bottom:12px;align-items:flex-end;flex-wrap:wrap}
+.form-row .fg{flex:1;min-width:140px}
+.form-row .fg label{display:block;font-size:12px;font-weight:700;color:var(--text-label);text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px}
+.form-row .fg input{width:100%;padding:8px 12px;background:var(--bg-input);border:1px solid var(--border);border-radius:6px;color:var(--text);font-size:14px;font-family:inherit}
+.form-row .fg input:focus{outline:none;border-color:var(--accent)}
+.form-row .fg select{width:100%;padding:8px 12px;background:var(--bg-input);border:1px solid var(--border);border-radius:6px;color:var(--text);font-size:14px;font-family:inherit}
+.check-inline{display:flex;align-items:center;gap:6px;font-size:13px;color:var(--text-label);cursor:pointer;padding:8px 0}
+.check-inline input{width:16px;height:16px;accent-color:var(--accent)}
+.btn-success{padding:8px 16px;border:none;border-radius:6px;background:var(--success);color:#000;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit}
+.btn-success:hover{background:#00c577}
+.btn-danger{padding:6px 12px;border:1px solid var(--error);border-radius:4px;background:transparent;color:var(--error);font-size:12px;cursor:pointer;font-family:inherit}
+.btn-danger:hover{background:var(--error);color:#fff}
+.toast{position:fixed;bottom:24px;right:24px;padding:12px 20px;border-radius:8px;font-size:14px;font-weight:600;z-index:300;animation:slideUp .3s ease;box-shadow:0 4px 16px rgba(0,0,0,.15)}
+.toast-success{background:var(--success);color:#000}
+.toast-error{background:var(--error);color:#fff}
+@keyframes slideUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+
+/* Stats */
+.stats{display:flex;gap:16px;margin-bottom:24px;flex-wrap:wrap}
+.stat{flex:1;min-width:140px;background:var(--bg-surface);border:1px solid var(--border);border-radius:10px;padding:20px;text-align:center}
+.stat-num{font-size:32px;font-weight:700;color:var(--text-heading)}
+.stat-label{font-size:12px;color:var(--text-muted);text-transform:uppercase;letter-spacing:1px;margin-top:4px}
+.stat-pending .stat-num{color:var(--warn)}
+.stat-submitted .stat-num{color:#059669}
+
+/* Responsive */
+@media(max-width:768px){
+  .top-bar{flex-wrap:wrap;gap:8px}
+  .container{padding:16px}
+  .stats{flex-direction:column}
+  .create-row{flex-direction:column}
+  .filter-row{flex-direction:column}
+  .form-row{flex-direction:column}
+  .modal{padding:20px}
+}
+
+/* Scrollbar dark */
+[data-theme="dark"] ::-webkit-scrollbar{width:8px}
+[data-theme="dark"] ::-webkit-scrollbar-track{background:#191919}
+[data-theme="dark"] ::-webkit-scrollbar-thumb{background:#333;border-radius:4px}
+</style>
+</head>
+<body>
+
+<div class="top-bar">
+  <div class="top-left">
+    <svg class="logo-svg" viewBox="0 0 133 36" xmlns="http://www.w3.org/2000/svg">
+      <polygon class="it-letter" points="12.6,4.7 12.6,0 0,0 0,4.7 3.6,4.7 3.6,24.1 0,24.1 0,28.8 12.6,28.8 12.6,24.1 9.1,24.1 9.1,4.7"/>
+      <path class="it-letter" d="M16.3,4.7V0H36v4.7h-7.1v24.1h-5.5V4.7H16.3z"/>
+      <path class="daily-letter" d="M37.9,18c0-1.6,0.2-3,0.5-4.4S39.3,11,40,10s1.6-1.8,2.7-2.4c1-0.6,2.3-0.9,3.7-0.9s2.7,0.3,3.7,0.9c1.1,0.6,1.9,1.4,2.6,2.5V0H58v28.8h-5.3v-2.9c-0.7,1.1-1.5,1.9-2.5,2.5s-2.2,0.9-3.7,0.9c-1.4,0-2.7-0.3-3.8-0.9S40.7,27,40,26s-1.3-2.2-1.6-3.6C38.1,21.1,37.9,19.6,37.9,18z M43.4,21.1c0,1.2,0.4,2.2,1.2,3s1.9,1.2,3.3,1.2c1.7,0,2.9-0.5,3.7-1.5s1.2-2.4,1.2-4.1v-3.2c0-1.7-0.4-3.1-1.2-4.1s-2-1.5-3.7-1.5c-1.4,0-2.5,0.4-3.3,1.2s-1.2,1.8-1.2,3C43.4,15.1,43.4,21.1,43.4,21.1z"/>
+      <path class="daily-letter" d="M62.1,22.7c0-1.7,0.6-3.3,1.8-4.5c1.2-1.3,3-2,5.3-2.2l6-0.5V14c0-1.1-0.3-1.9-0.9-2.5c-0.6-0.5-1.4-0.8-2.5-0.8s-2,0.3-2.6,0.8c-0.7,0.5-1,1.3-1,2.3h-5.3c0-1.2,0.3-2.2,0.8-3.1s1.1-1.6,1.9-2.2s1.8-1,2.9-1.4c1.1-0.3,2.3-0.5,3.6-0.5c2.6,0,4.6,0.6,6.1,1.9s2.3,3.1,2.3,5.5v10.6H84v4.1h-8.3v-3.3h-0.2c-0.6,1.2-1.4,2.1-2.5,2.8c-1,0.7-2.4,1-4,1c-1,0-1.9-0.2-2.7-0.5s-1.5-0.8-2.2-1.4c-0.6-0.6-1.1-1.3-1.4-2.1C62.3,24.6,62.1,23.7,62.1,22.7z M67.6,23.3c0,0.6,0.3,1.1,0.9,1.5c0.6,0.3,1.4,0.5,2.3,0.5c1.4,0,2.4-0.5,3.2-1.4c0.8-1,1.2-2.1,1.2-3.5v-0.8L68.8,20c-0.8,0.1-1.2,0.6-1.2,1.4V23.3z"/>
+      <path class="daily-letter" d="M86.6,4.7V0H92v4.7H86.6z M86.7,28.8V7.2H92v21.6H86.7z"/>
+      <polygon class="daily-letter" points="102,24.7 102,0 96.7,0 96.7,28.8 105.6,28.8 105.6,24.7"/>
+      <path class="daily-letter" d="M105.9,7.2h5.7l4.7,15.4h0.2l4.8-15.4h5.6L116.5,36h-9.2v-4.1h5.4l1.1-3.1L105.9,7.2z"/>
+      <path class="daily-letter" d="M126.9,28.8v-6.1h6.1v6.1H126.9z"/>
+    </svg>
+  </div>
+  <div class="top-right">
+    <span class="user-info">Signed in as <strong id="userName"></strong></span>
+    <button class="theme-toggle" id="themeToggle" type="button">
+      <span class="t-icon" id="themeIcon">&#9788;</span>
+      <span class="t-label" id="themeLabel">Light</span>
+    </button>
+    <button class="btn-sm" onclick="doLogout()">Logout</button>
+  </div>
+</div>
+
+<div class="container">
+  <div class="tabs">
+    <div class="tab active" data-tab="forms">Forms</div>
+    <div class="tab" data-tab="settings">Settings</div>
+  </div>
+
+  <!-- ═══════ FORMS TAB ═══════ -->
+  <div class="tab-content active" id="tab-forms">
+
+    <div class="stats">
+      <div class="stat stat-pending"><div class="stat-num" id="countPending">0</div><div class="stat-label">Pending</div></div>
+      <div class="stat stat-submitted"><div class="stat-num" id="countSubmitted">0</div><div class="stat-label">Submitted</div></div>
+    </div>
+
+    <!-- Create new -->
+    <div class="card">
+      <h3>Create new form link</h3>
+      <div class="create-row">
+        <div class="input-wrap">
+          <label>Client name</label>
+          <input type="text" id="newClientName" placeholder="e.g. ACME Software Group" maxlength="100">
+        </div>
+        <button class="btn-accent" id="btnCreate" onclick="createFormLink()">Generate link</button>
+      </div>
+    </div>
+
+    <!-- Pending forms -->
+    <div class="card">
+      <h3>Pending forms <span id="pendingCount" style="color:var(--text-muted);font-weight:400;text-transform:none;letter-spacing:0"></span></h3>
+      <div class="tbl-wrap">
+        <table>
+          <thead><tr><th>Client</th><th>URL</th><th>Created</th><th></th></tr></thead>
+          <tbody id="pendingBody"><tr class="empty-row"><td colspan="4">Loading...</td></tr></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Submitted forms -->
+    <div class="card">
+      <h3>Submitted forms <span id="submittedCount" style="color:var(--text-muted);font-weight:400;text-transform:none;letter-spacing:0"></span></h3>
+      <div class="filter-row">
+        <div><label>From</label><br><input type="date" id="filterFrom"></div>
+        <div><label>To</label><br><input type="date" id="filterTo"></div>
+        <button class="btn-filter" onclick="loadSubmitted()">Filter</button>
+        <button class="btn-clear" onclick="clearFilter()">Clear</button>
+      </div>
+      <div class="tbl-wrap">
+        <table>
+          <thead><tr><th>Client</th><th>Company</th><th>Campaign</th><th>Submitted</th><th></th></tr></thead>
+          <tbody id="submittedBody"><tr class="empty-row"><td colspan="5">Loading...</td></tr></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════ SETTINGS TAB ═══════ -->
+  <div class="tab-content" id="tab-settings">
+
+    <!-- User management (admin only) -->
+    <div class="card" id="userMgmt" style="display:none">
+      <h3>User management</h3>
+      <div class="form-row" id="addUserRow">
+        <div class="fg"><label>Username</label><input type="text" id="newUsername" placeholder="username"></div>
+        <div class="fg"><label>Display name</label><input type="text" id="newDisplayName" placeholder="Full Name"></div>
+        <div class="fg"><label>Password</label><input type="password" id="newUserPass" placeholder="min 6 chars"></div>
+        <div style="display:flex;flex-direction:column;gap:4px">
+          <label class="check-inline"><input type="checkbox" id="newUserAdmin"> Admin</label>
+          <button class="btn-accent" onclick="addUser()" style="padding:8px 14px;font-size:13px">Add user</button>
+        </div>
+      </div>
+      <div class="tbl-wrap" style="margin-top:16px">
+        <table>
+          <thead><tr><th>Username</th><th>Display name</th><th>Role</th><th>Actions</th></tr></thead>
+          <tbody id="usersBody"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Change password -->
+    <div class="card">
+      <h3>Change password</h3>
+      <div class="form-row">
+        <div class="fg" id="currentPwWrap"><label>Current password</label><input type="password" id="currentPw" placeholder="Your current password"></div>
+        <div class="fg"><label>New password</label><input type="password" id="newPw" placeholder="Min 6 characters"></div>
+        <div class="fg"><label>Confirm</label><input type="password" id="confirmPw" placeholder="Repeat new password"></div>
+        <button class="btn-accent" onclick="changePassword()" style="padding:8px 14px;font-size:13px;align-self:flex-end">Update</button>
+      </div>
+    </div>
+
+    <!-- Email test (admin only) -->
+    <div class="card" id="emailTest" style="display:none">
+      <h3>Email configuration test</h3>
+      <p style="font-size:13px;color:var(--text-muted);margin-bottom:12px">Send a test email to cedric@itdaily.be to verify SMTP settings.</p>
+      <button class="btn-accent" id="btnTestEmail" onclick="testEmail()">Send test email</button>
+      <span id="emailResult" style="margin-left:12px;font-size:13px"></span>
+    </div>
+  </div>
+</div>
+
+<!-- Modal: URL created -->
+<div class="modal-overlay" id="urlModal">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('urlModal')">&times;</button>
+    <h3>&#10003; Form link created</h3>
+    <p style="color:var(--text-muted);font-size:14px">Share this URL with your client. The form can only be filled in once.</p>
+    <div class="modal-url">
+      <span class="url-full" id="createdUrl"></span>
+      <button class="btn-copy-lg" onclick="copyUrl(this)" data-url="">Copy URL</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal: Submission detail -->
+<div class="modal-overlay" id="detailModal">
+  <div class="modal" style="max-width:700px">
+    <button class="modal-close" onclick="closeModal('detailModal')">&times;</button>
+    <h3 id="detailTitle">Submission details</h3>
+    <table class="detail-table" id="detailTable"></table>
+    <div class="detail-actions" id="detailActions"></div>
+  </div>
+</div>
+
+<!-- Modal: Reset password -->
+<div class="modal-overlay" id="resetPwModal">
+  <div class="modal" style="max-width:400px">
+    <button class="modal-close" onclick="closeModal('resetPwModal')">&times;</button>
+    <h3>Reset password</h3>
+    <p style="color:var(--text-muted);font-size:13px;margin-bottom:12px">Set a new password for <strong id="resetPwUser"></strong></p>
+    <div style="margin-bottom:12px"><input type="password" id="resetPwInput" placeholder="New password (min 6 chars)" style="width:100%;padding:10px 14px;background:var(--bg-input);border:1px solid var(--border);border-radius:6px;color:var(--text);font-size:14px;font-family:inherit"></div>
+    <button class="btn-accent" onclick="doResetPassword()">Reset password</button>
+  </div>
+</div>
+
+<script>
+/* ─── Theme ─── */
+const TM={
+  mq:window.matchMedia('(prefers-color-scheme: dark)'),
+  eff(){const s=localStorage.getItem('leadgen-theme');return(s==='dark'||s==='light')?s:this.mq.matches?'dark':'light'},
+  apply(t){
+    t==='dark'?document.documentElement.setAttribute('data-theme','dark'):document.documentElement.removeAttribute('data-theme');
+    const i=document.getElementById('themeIcon'),l=document.getElementById('themeLabel');
+    if(i)i.innerHTML=t==='dark'?'&#9790;':'&#9788;';if(l)l.textContent=t==='dark'?'Dark':'Light';
+  },
+  toggle(){const n=this.eff()==='dark'?'light':'dark';localStorage.setItem('leadgen-theme',n);this.apply(n)},
+  init(){this.apply(this.eff());this.mq.addEventListener('change',()=>{if(!localStorage.getItem('leadgen-theme'))this.apply(this.eff())});
+    document.getElementById('themeToggle').addEventListener('click',()=>this.toggle())}
+};
+TM.apply(TM.eff());
+
+/* ─── State ─── */
+let currentUser = null;
+let resetPwUserId = null;
+
+/* ─── API helper ─── */
+async function api(url, opts={}){
+  const r = await fetch(url, opts);
+  if(r.status===401){window.location.href='/login';return null}
+  const d = await r.json();
+  if(!r.ok) throw new Error(d.detail||'Request failed');
+  return d;
+}
+
+/* ─── Init ─── */
+document.addEventListener('DOMContentLoaded', async()=>{
+  TM.init();
+  try{
+    currentUser = await api('/api/auth/me');
+    document.getElementById('userName').textContent = currentUser.display_name;
+    if(currentUser.is_admin){
+      document.getElementById('userMgmt').style.display='';
+      document.getElementById('emailTest').style.display='';
+      document.getElementById('currentPwWrap').style.display='none';
+      loadUsers();
+    }
+    loadPending();
+    loadSubmitted();
+  }catch(e){window.location.href='/login'}
+
+  // Tab switching
+  document.querySelectorAll('.tab').forEach(t=>{
+    t.addEventListener('click',()=>{
+      document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));
+      document.querySelectorAll('.tab-content').forEach(x=>x.classList.remove('active'));
+      t.classList.add('active');
+      document.getElementById('tab-'+t.dataset.tab).classList.add('active');
+    });
+  });
+
+  // Enter key on create
+  document.getElementById('newClientName').addEventListener('keydown',e=>{
+    if(e.key==='Enter')createFormLink();
+  });
+});
+
+/* ─── Toast ─── */
+function toast(msg, type='success'){
+  const t=document.createElement('div');
+  t.className='toast toast-'+type;
+  t.textContent=msg;
+  document.body.appendChild(t);
+  setTimeout(()=>t.remove(),3000);
+}
+
+/* ─── Modal ─── */
+function closeModal(id){document.getElementById(id).classList.remove('show')}
+document.querySelectorAll('.modal-overlay').forEach(o=>{o.addEventListener('click',e=>{if(e.target===o)o.classList.remove('show')})});
+function openModal(id){document.getElementById(id).classList.add('show')}
+
+/* ─── Logout ─── */
+async function doLogout(){
+  try{await fetch('/api/auth/logout',{method:'POST'})}catch(e){}
+  window.location.href='/login';
+}
+
+/* ─── Format date ─── */
+function fmtDate(iso){
+  if(!iso)return'\u2014';
+  const d=new Date(iso);
+  return d.toLocaleDateString('nl-BE',{day:'2-digit',month:'2-digit',year:'numeric'})+' '+d.toLocaleTimeString('nl-BE',{hour:'2-digit',minute:'2-digit'});
+}
+function fmtDateShort(iso){
+  if(!iso)return'\u2014';
+  return new Date(iso).toLocaleDateString('nl-BE',{day:'2-digit',month:'2-digit',year:'numeric'});
+}
+
+/* ─── Create form link ─── */
+async function createFormLink(){
+  const name=document.getElementById('newClientName').value.trim();
+  if(!name||name.length<2){toast('Enter a client name (min 2 chars)','error');return}
+  const btn=document.getElementById('btnCreate');
+  btn.disabled=true;
+  try{
+    const d=await api('/api/forms/create',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({client_name:name})});
+    document.getElementById('createdUrl').textContent=d.url;
+    document.querySelector('#urlModal .btn-copy-lg').dataset.url=d.url;
+    document.querySelector('#urlModal .btn-copy-lg').textContent='Copy URL';
+    document.querySelector('#urlModal .btn-copy-lg').classList.remove('copied');
+    openModal('urlModal');
+    document.getElementById('newClientName').value='';
+    loadPending();
+  }catch(e){toast(e.message,'error')}
+  btn.disabled=false;
+}
+
+/* ─── Copy URL ─── */
+function copyUrl(btn){
+  const url=btn.dataset.url||btn.closest('.url-cell')?.querySelector('.url-text')?.textContent;
+  navigator.clipboard.writeText(url).then(()=>{
+    btn.textContent='Copied!';btn.classList.add('copied');
+    setTimeout(()=>{btn.textContent='Copy';btn.classList.remove('copied')},2000);
+  });
+}
+function copyUrlLg(btn){
+  navigator.clipboard.writeText(btn.dataset.url).then(()=>{
+    btn.textContent='Copied!';btn.classList.add('copied');
+    setTimeout(()=>{btn.textContent='Copy URL';btn.classList.remove('copied')},2000);
+  });
+}
+
+/* ─── Load pending ─── */
+async function loadPending(){
+  try{
+    const data=await api('/api/forms/pending');
+    document.getElementById('countPending').textContent=data.length;
+    document.getElementById('pendingCount').textContent=`(${data.length})`;
+    const body=document.getElementById('pendingBody');
+    if(!data.length){body.innerHTML='<tr class="empty-row"><td colspan="4">No pending forms</td></tr>';return}
+    body.innerHTML=data.map(r=>`<tr>
+      <td><strong>${esc(r.client_name)}</strong></td>
+      <td><div class="url-cell"><span class="url-text">${esc(r.url)}</span><button class="btn-copy" onclick="this.dataset.url='${esc(r.url)}';copyUrl(this)">Copy</button></div></td>
+      <td>${fmtDate(r.created_at)}</td>
+      <td>${currentUser&&currentUser.is_admin?`<button class="btn-del" onclick="deleteForm(${r.id},'${esc(r.client_name)}')">Delete</button>`:''}</td>
+    </tr>`).join('');
+  }catch(e){console.error(e)}
+}
+
+/* ─── Load submitted ─── */
+async function loadSubmitted(){
+  try{
+    let url='/api/forms/submitted';
+    const from=document.getElementById('filterFrom').value;
+    const to=document.getElementById('filterTo').value;
+    const params=[];
+    if(from)params.push('from='+from);
+    if(to)params.push('to='+to);
+    if(params.length)url+='?'+params.join('&');
+
+    const data=await api(url);
+    document.getElementById('countSubmitted').textContent=data.length;
+    document.getElementById('submittedCount').textContent=`(${data.length})`;
+    const body=document.getElementById('submittedBody');
+    if(!data.length){body.innerHTML='<tr class="empty-row"><td colspan="5">No submitted forms</td></tr>';return}
+    body.innerHTML=data.map(r=>`<tr>
+      <td><strong>${esc(r.client_name)}</strong></td>
+      <td>${esc(r.company_name||'\u2014')}</td>
+      <td>${esc(r.campaign_name||'\u2014')}</td>
+      <td>${fmtDate(r.submitted_at)}</td>
+      <td><button class="btn-view" onclick="viewDetail(${r.id})">View</button>${currentUser&&currentUser.is_admin?` <button class="btn-del" onclick="deleteSubmitted(${r.id},'${esc(r.client_name)}')">Delete</button>`:''}</td>
+    </tr>`).join('');
+  }catch(e){console.error(e)}
+}
+
+async function deleteSubmitted(id, name){
+  if(!confirm('Delete submitted form "'+name+'" and all its data? This cannot be undone.'))return;
+  try{await api('/api/forms/'+id,{method:'DELETE'});toast('Form deleted');loadSubmitted();loadPending()}catch(e){toast('Delete failed','error')}
+}
+
+function clearFilter(){
+  document.getElementById('filterFrom').value='';
+  document.getElementById('filterTo').value='';
+  loadSubmitted();
+}
+
+/* ─── View detail ─── */
+async function viewDetail(formId){
+  try{
+    const d=await api('/api/forms/'+formId);
+    document.getElementById('detailTitle').textContent=d.client_name+' \u2014 Submission Details';
+    const s=d.submission;
+    if(!s){toast('No submission data found','error');return}
+
+    const fields=[
+      ['Company Name',s.company_name],['Contact Email',s.contact_email],
+      ['Company Website',s.company_website||'\u2014'],
+      ['Whitepaper Title',s.whitepaper_title||'\u2014'],
+      ['Campaign Name',s.campaign_name],['Number of Leads',s.number_of_leads],
+      ['Start Date',s.start_date],['End Date',s.end_date],
+      ['Country',s.country],['Lead Distribution',s.lead_distribution||'\u2014'],
+      ['Industry',Array.isArray(s.industry)?s.industry.join(', '):s.industry||'\u2014'],
+      ['Employees',Array.isArray(s.number_of_employees)?s.number_of_employees.join(', '):s.number_of_employees||'\u2014'],
+      ['Job Level',Array.isArray(s.job_level)?s.job_level.join(', '):s.job_level||'\u2014'],
+      ['Max Leads/Company',s.max_leads_per_company||'\u2014'],
+      ['Annual Revenue',Array.isArray(s.company_annual_revenue)?s.company_annual_revenue.join(', '):s.company_annual_revenue||'\u2014'],
+      ['Notes',s.notes||'\u2014'],
+      ['Multiple-choice',s.multiple_choice_answer||'\u2014'],
+      ['Submitted',fmtDate(s.created_at)]
+    ];
+    document.getElementById('detailTable').innerHTML=fields.map(([l,v])=>`<tr><td>${l}</td><td>${esc(String(v))}</td></tr>`).join('');
+
+    // Actions
+    let actions='<a class="btn-download" href="/api/export/'+formId+'" target="_blank">&#128196; Export CSV</a>';
+    if(s.logo_path)actions+=`<a class="btn-download" href="/api/download?path=${encodeURIComponent(s.logo_path)}" target="_blank">&#128247; Download Logo</a>`;
+    if(s.whitepaper_paths&&s.whitepaper_paths.length){
+      s.whitepaper_paths.forEach((p,i)=>{actions+=`<a class="btn-download" href="/api/download?path=${encodeURIComponent(p)}" target="_blank">&#128196; Whitepaper ${i+1}</a>`});
+    }
+    if(s.exclusion_list_path)actions+=`<a class="btn-download" href="/api/download?path=${encodeURIComponent(s.exclusion_list_path)}" target="_blank">&#128203; Exclusion List</a>`;
+    document.getElementById('detailActions').innerHTML=actions;
+    openModal('detailModal');
+  }catch(e){toast(e.message,'error')}
+}
+
+/* ─── Delete form ─── */
+async function deleteForm(id, name){
+  if(!confirm(`Delete the form link for "${name}"? This cannot be undone.`))return;
+  try{
+    await api('/api/forms/'+id,{method:'DELETE'});
+    toast('Form link deleted');
+    loadPending();
+  }catch(e){toast(e.message,'error')}
+}
+
+/* ─── Users ─── */
+async function loadUsers(){
+  try{
+    const data=await api('/api/users');
+    document.getElementById('usersBody').innerHTML=data.map(u=>`<tr>
+      <td>${esc(u.username)}</td>
+      <td>${esc(u.display_name)}</td>
+      <td>${u.is_admin?'<span class="badge badge-submitted">Admin</span>':'<span class="badge badge-pending">User</span>'}</td>
+      <td style="display:flex;gap:6px;flex-wrap:wrap">
+        ${u.id!==currentUser.id?`
+          <button class="btn-view" onclick="promptResetPw(${u.id},'${esc(u.username)}')">Reset PW</button>
+          <button class="btn-view" onclick="toggleAdmin(${u.id},${u.is_admin?0:1})">${u.is_admin?'Remove admin':'Make admin'}</button>
+          <button class="btn-del" onclick="deleteUser(${u.id},'${esc(u.username)}')">Delete</button>
+        `:'<span style="color:var(--text-muted);font-size:12px">You</span>'}
+      </td>
+    </tr>`).join('');
+  }catch(e){console.error(e)}
+}
+
+async function addUser(){
+  const username=document.getElementById('newUsername').value.trim();
+  const display=document.getElementById('newDisplayName').value.trim();
+  const pw=document.getElementById('newUserPass').value;
+  const admin=document.getElementById('newUserAdmin').checked;
+  if(!username||!pw){toast('Username and password required','error');return}
+  try{
+    await api('/api/users',{method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({username,display_name:display,password:pw,is_admin:admin})});
+    toast('User created');
+    document.getElementById('newUsername').value='';
+    document.getElementById('newDisplayName').value='';
+    document.getElementById('newUserPass').value='';
+    document.getElementById('newUserAdmin').checked=false;
+    loadUsers();
+  }catch(e){toast(e.message,'error')}
+}
+
+async function deleteUser(id,name){
+  if(!confirm(`Delete user "${name}"?`))return;
+  try{await api('/api/users/'+id,{method:'DELETE'});toast('User deleted');loadUsers()}
+  catch(e){toast(e.message,'error')}
+}
+
+async function toggleAdmin(id,val){
+  try{await api('/api/users/'+id+'/admin',{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify({is_admin:!!val})});
+    toast('Admin status updated');loadUsers()}
+  catch(e){toast(e.message,'error')}
+}
+
+function promptResetPw(id,username){
+  resetPwUserId=id;
+  document.getElementById('resetPwUser').textContent=username;
+  document.getElementById('resetPwInput').value='';
+  openModal('resetPwModal');
+}
+
+async function doResetPassword(){
+  const pw=document.getElementById('resetPwInput').value;
+  if(!pw||pw.length<6){toast('Password must be at least 6 characters','error');return}
+  try{
+    await api('/api/users/'+resetPwUserId+'/password',{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify({new_password:pw})});
+    toast('Password reset');closeModal('resetPwModal');
+  }catch(e){toast(e.message,'error')}
+}
+
+/* ─── Change own password ─── */
+async function changePassword(){
+  const cur=document.getElementById('currentPw').value;
+  const np=document.getElementById('newPw').value;
+  const cp=document.getElementById('confirmPw').value;
+  if(np!==cp){toast('Passwords do not match','error');return}
+  if(np.length<6){toast('Password must be at least 6 characters','error');return}
+  const body={new_password:np};
+  if(!currentUser.is_admin)body.current_password=cur;
+  try{
+    await api('/api/users/'+currentUser.id+'/password',{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
+    toast('Password updated');
+    document.getElementById('currentPw').value='';
+    document.getElementById('newPw').value='';
+    document.getElementById('confirmPw').value='';
+  }catch(e){toast(e.message,'error')}
+}
+
+/* ─── Email test ─── */
+async function testEmail(){
+  const btn=document.getElementById('btnTestEmail');
+  const res=document.getElementById('emailResult');
+  btn.disabled=true;btn.textContent='Sending...';res.textContent='';
+  try{
+    const d=await api('/api/test-email',{method:'POST'});
+    res.style.color='var(--success)';res.textContent='\u2713 '+d.message;
+  }catch(e){
+    res.style.color='var(--error)';res.textContent='\u2717 '+e.message;
+  }
+  btn.disabled=false;btn.textContent='Send test email';
+}
+
+/* ─── Escape HTML ─── */
+function esc(s){
+  if(!s)return'';
+  const d=document.createElement('div');d.textContent=s;return d.innerHTML;
+}
+
+/* ─── Auto refresh pending every 30s ─── */
+setInterval(()=>{if(document.querySelector('.tab.active[data-tab="forms"]'))loadPending()},30000);
+</script>
+</body>
+</html>
