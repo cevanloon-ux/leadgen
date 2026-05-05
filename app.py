@@ -55,23 +55,33 @@ def check_rate_limit(ip: str, limits: dict = None, max_count: int = None, window
     return True
 
 # ── CSRF ────────────────────────────────────────────────────────────────
-csrf_tokens: dict = {}
+# CSRF tokens worden in SQLite bewaard zodat ze container-restarts overleven.
 
 @app.get("/api/csrf-token")
 async def get_csrf_token():
     token = uuid.uuid4().hex
-    csrf_tokens[token] = datetime.now().timestamp() + 3600
-    now = datetime.now().timestamp()
-    for k in [k for k, v in csrf_tokens.items() if v < now]:
-        del csrf_tokens[k]
+    expires = datetime.now().timestamp() + 3600
+    conn = get_db()
+    conn.execute("INSERT INTO csrf_tokens (token, expires_at) VALUES (?,?)", (token, expires))
+    # Opruimen van verlopen tokens
+    conn.execute("DELETE FROM csrf_tokens WHERE expires_at < ?", (datetime.now().timestamp(),))
+    conn.commit()
+    conn.close()
     return {"token": token}
 
 def verify_csrf(token: str) -> bool:
-    if token in csrf_tokens and csrf_tokens[token] > datetime.now().timestamp():
-        del csrf_tokens[token]
-        return True
-    csrf_tokens.pop(token, None)
-    return False
+    if not token:
+        return False
+    conn = get_db()
+    row = conn.execute(
+        "SELECT expires_at FROM csrf_tokens WHERE token=?", (token,)
+    ).fetchone()
+    valid = bool(row and row["expires_at"] > datetime.now().timestamp())
+    # Token is single-use: altijd verwijderen na lookup
+    conn.execute("DELETE FROM csrf_tokens WHERE token=?", (token,))
+    conn.commit()
+    conn.close()
+    return valid
 
 # ── Password hashing ───────────────────────────────────────────────────
 def hash_password(password: str, salt: str = None) -> tuple:
@@ -191,6 +201,11 @@ def init_db():
         ip_address TEXT,
         user_agent TEXT,
         FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+    );
+
+    CREATE TABLE IF NOT EXISTS csrf_tokens (
+        token TEXT PRIMARY KEY,
+        expires_at REAL NOT NULL
     );
 
     CREATE TABLE IF NOT EXISTS form_links (
