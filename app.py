@@ -1,6 +1,7 @@
 import os, re, uuid, json, sqlite3, logging, csv, io, hashlib, secrets, string
 from datetime import datetime, timedelta
 from pathlib import Path
+from urllib.parse import quote
 from fastapi import FastAPI, Request, UploadFile, HTTPException
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import HTMLResponse, JSONResponse, StreamingResponse, FileResponse, RedirectResponse
@@ -320,6 +321,23 @@ def build_email_html(data: dict) -> str:
             val = "\u2014"
         rows += f'<tr><td style="padding:10px 16px;border-bottom:1px solid #222;color:#999;font-weight:700;width:40%;vertical-align:top">{label}</td><td style="padding:10px 16px;border-bottom:1px solid #222;color:#fff">{val}</td></tr>'
 
+    # ── Exclusion list status (uploaded / not uploaded) ──
+    excl_uploaded = bool(data.get("exclusion_list_path"))
+    excl_val = "✔ Uploaded" if excl_uploaded else "— Not uploaded"
+    excl_color = "#00D2D2" if excl_uploaded else "#e57373"
+    rows += f'<tr><td style="padding:10px 16px;border-bottom:1px solid #222;color:#999;font-weight:700;width:40%;vertical-align:top">Exclusion List</td><td style="padding:10px 16px;border-bottom:1px solid #222;color:{excl_color};font-weight:700">{excl_val}</td></tr>'
+
+    # ── Whitepaper download button(s) ──
+    wp_paths = data.get("whitepaper_paths") or []
+    wp_section = ""
+    if wp_paths:
+        buttons = ""
+        for i, p in enumerate(wp_paths):
+            dl_url = f"{BASE_URL}/api/download?path={quote(p, safe='')}"
+            btn_label = "Download whitepaper" if len(wp_paths) == 1 else f"Download whitepaper {i + 1}"
+            buttons += f'<a href="{dl_url}" style="display:inline-block;margin:6px 6px 0 0;padding:12px 24px;background:#00D2D2;color:#000;text-decoration:none;border-radius:6px;font-weight:700;font-size:14px">⬇ {btn_label}</a>'
+        wp_section = f'<div style="margin-top:24px;padding:20px;background:#111;border-radius:8px;text-align:center"><p style="color:#999;font-size:13px;margin:0 0 10px">Whitepaper &mdash; sign in to leads.itdaily.com to download</p>{buttons}</div>'
+
     return f"""<!DOCTYPE html><html><body style="margin:0;padding:0;background:#000;font-family:'Helvetica Neue',Helvetica,Arial,sans-serif">
 <div style="max-width:640px;margin:0 auto;padding:32px 24px">
 <div style="text-align:center;padding-bottom:24px;border-bottom:1px solid #222;margin-bottom:32px">
@@ -328,6 +346,7 @@ def build_email_html(data: dict) -> str:
 <h2 style="color:#fff;font-size:20px;margin-bottom:8px">Lead Campaign Submission</h2>
 <p style="color:#999;font-size:14px;margin-bottom:32px">Submitted on {datetime.now().strftime('%d.%m.%Y at %H:%M')}</p>
 <table style="width:100%;border-collapse:collapse;background:#111;border-radius:8px;overflow:hidden">{rows}</table>
+{wp_section}
 <div style="margin-top:40px;padding-top:24px;border-top:1px solid #222;text-align:center;color:#666;font-size:12px">
 <p>&copy; {datetime.now().year} ITdaily. All rights reserved.</p>
 </div></div></body></html>"""
@@ -884,7 +903,8 @@ async def submit_form(request: Request):
         "industry": industry, "number_of_employees": num_employees,
         "job_level": job_level, "max_leads_per_company": str(max_leads_company),
         "company_annual_revenue": annual_revenue,
-        "notes": notes, "multiple_choice_answer": mc_answer
+        "notes": notes, "multiple_choice_answer": mc_answer,
+        "whitepaper_paths": whitepaper_paths, "exclusion_list_path": exclusion_path
     }
     html = build_email_html(email_data)
     send_email(
